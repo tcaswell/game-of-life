@@ -24,11 +24,6 @@ func initializeGrid() {
 	// Allocate one large slice to hold all of the cell states
 	cellStates := make([]bool, numColumns*numRows)
 
-	// Initialize all cells to the dead state
-	for i := range cellStates {
-		cellStates[i] = dead
-	}
-
 	// Partition the large slice for use by the top level grid slice
 	for i := range grid {
 		grid[i], cellStates = cellStates[:numColumns], cellStates[numColumns:]
