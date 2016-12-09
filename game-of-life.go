@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"time"
 )
 
-const numColumns, numRows = 20, 20
+const numColumns, numRows = 50, 50
 const dead, alive = false, true
 
 var grid [][]bool
@@ -19,6 +20,7 @@ type cellCoordinates struct {
 }
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 
 	// Clear the terminal to make way for the grid
 	cmd := exec.Command("clear")
@@ -27,17 +29,11 @@ func main() {
 
 	initializeGrid()
 
-	grid[8][9] = true
-	grid[9][9] = true
-	grid[10][9] = true
-	grid[10][10] = true
-	grid[7][11] = true
-
 	displayGrid()
 
 	// Game loop
 	for {
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 		tick()
 		for _, cell := range changedCells {
 			grid[cell.x][cell.y] = !grid[cell.x][cell.y]
@@ -53,6 +49,10 @@ func initializeGrid() {
 	// Allocate one large slice to hold all of the cell states
 	cellStates := make([]bool, numColumns*numRows)
 
+	for i := range cellStates {
+		cellStates[i] = rand.Intn(100) > 90
+	}
+
 	// Partition the large slice for use by the top level grid slice
 	for i := range grid {
 		grid[i], cellStates = cellStates[:numColumns], cellStates[numColumns:]
@@ -64,7 +64,7 @@ func displayGrid() {
 	for y := numRows - 1; y >= 0; y = y - 1 {
 		for x := 0; x < numColumns; x = x + 1 {
 			if grid[x][y] {
-				fmt.Print("*")
+				fmt.Print("+")
 			} else {
 				fmt.Print(" ")
 			}
