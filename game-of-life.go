@@ -19,23 +19,21 @@ type cellCoordinates struct {
 func main() {
 	initializeGrid()
 
-	grid[1][2] = true
-	grid[5][5] = true
-	grid[6][5] = true
+	grid[3][4] = true
+	grid[4][4] = true
+	grid[5][4] = true
 
 	displayGrid()
-	time.Sleep(0)
-	/*
-		// Game loop
-		for {
-			time.Sleep(1000 * time.Millisecond)
-			tick()
-			for _, cell := range changedCells {
-				grid[cell.x][cell.y] = !grid[cell.x][cell.y]
-			}
-			displayGrid()
+
+	// Game loop
+	for {
+		time.Sleep(1000 * time.Millisecond)
+		tick()
+		for _, cell := range changedCells {
+			grid[cell.x][cell.y] = !grid[cell.x][cell.y]
 		}
-	*/
+		displayGrid()
+	}
 }
 
 func initializeGrid() {
@@ -53,9 +51,9 @@ func initializeGrid() {
 
 func displayGrid() {
 	fmt.Print("\033[2J")
-	for _, columns := range grid {
-		for _, cellState := range columns {
-			if cellState {
+	for y := numRows - 1; y >= 0; y = y - 1 {
+		for x := 0; x < numColumns; x = x + 1 {
+			if grid[x][y] {
 				fmt.Print("*")
 			} else {
 				fmt.Print("-")
@@ -79,15 +77,17 @@ func tick() {
 
 func willBeAlive(x int, y int) bool {
 	numLiveNeighbors := getNumLiveNeighbors(x, y)
-	fmt.Printf("(%d, %d, %d)", x, y, numLiveNeighbors)
-	return !(numLiveNeighbors < 2 || numLiveNeighbors > 3)
+	if grid[x][y] {
+		return numLiveNeighbors == 2 || numLiveNeighbors == 3
+	}
+	return numLiveNeighbors == 3
 }
 
 func getNumLiveNeighbors(x int, y int) int {
 	neighbors := 0
 	for xx := x - 1; xx <= x+1; xx = xx + 1 {
 		for yy := y - 1; yy <= y+1; yy = yy + 1 {
-			if xx != x && yy != y && inBounds(xx, yy) && grid[xx][yy] {
+			if !(xx == x && yy == y) && inBounds(xx, yy) && grid[xx][yy] {
 				neighbors = neighbors + 1
 			}
 		}
