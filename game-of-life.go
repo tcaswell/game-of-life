@@ -64,7 +64,7 @@ func displayGrid() {
 	for y := numRows - 1; y >= 0; y = y - 1 {
 		for x := 0; x < numColumns; x = x + 1 {
 			if grid[x][y] {
-				fmt.Print("+")
+				fmt.Print("*")
 			} else {
 				fmt.Print(" ")
 			}
