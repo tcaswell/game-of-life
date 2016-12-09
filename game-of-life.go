@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"time"
 )
 
-const numColumns, numRows = 10, 10
+const numColumns, numRows = 20, 20
 const dead, alive = false, true
 
 var grid [][]bool
@@ -17,17 +19,25 @@ type cellCoordinates struct {
 }
 
 func main() {
+
+	// Clear the terminal to make way for the grid
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+
 	initializeGrid()
 
-	grid[3][4] = true
-	grid[4][4] = true
-	grid[5][4] = true
+	grid[8][9] = true
+	grid[9][9] = true
+	grid[10][9] = true
+	grid[10][10] = true
+	grid[7][11] = true
 
 	displayGrid()
 
 	// Game loop
 	for {
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
 		tick()
 		for _, cell := range changedCells {
 			grid[cell.x][cell.y] = !grid[cell.x][cell.y]
@@ -50,13 +60,13 @@ func initializeGrid() {
 }
 
 func displayGrid() {
-	fmt.Print("\033[2J")
+	fmt.Print("\033[0;0H")
 	for y := numRows - 1; y >= 0; y = y - 1 {
 		for x := 0; x < numColumns; x = x + 1 {
 			if grid[x][y] {
 				fmt.Print("*")
 			} else {
-				fmt.Print("-")
+				fmt.Print(" ")
 			}
 		}
 		fmt.Println()
